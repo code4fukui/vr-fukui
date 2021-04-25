@@ -1,0 +1,43 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width">
+<html>
+<head>
+<meta charset="utf-8">
+<title>VRふくい</title>
+<style>
+body {
+    background-image: url("./bg.jpg");
+    background-position: center center;
+    background-size: auto 100%;
+    background-repeat: no-repeat;
+    height: 100vh;
+    text-align: center;
+}
+a {
+    color: black !important;
+}
+#ccby {
+    height: 1.5em;
+    margin: 1em;
+}
+</style>
+</head>
+<body>
+<script type="module">
+import { CSV } from "https://js.sabae.cc/CSV.js";
+
+window.onload = async () => {
+    const data = CSV.toJSON(await CSV.fetch("vr-fukui.csv"));
+    for (const d of data) {
+        const div = document.createElement("a");
+        div.style.display = "block";
+        div.href = "vr-view.html#img/" + d.filename; // ,0%20-90%200
+        div.textContent = d.name;
+        main.appendChild(div);
+    }
+};
+</script>
+<h1>VRふくい</h1>
+<div id="main"></div>
+<a href=https://github.com/code4fukui/vr-fukui/><img id="ccby" src="./ccby.png"></a>
+</body>
+</html>
