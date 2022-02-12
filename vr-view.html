@@ -2,25 +2,64 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>vrview</title>
+<title>VRふくい - vrview</title>
 <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
 </head>
 <body>
-<a-scene>
+<a-scene id="scene">
 <a-sky id=sky></a-sky>
+<a-camera id="camera"></a-camera>
+<a-entity cursor="rayOrigin: mouse"></a-entity>
 </a-scene>
-<script type=module>
+
+<script type="module">
 window.onload = () => {
-    const ss = document.location.hash.substring(1).split(",");
-    const src = ss[0];
-    sky.setAttribute("src", src);
-    if (ss.length > 1) {
-        const rotation = decodeURIComponent(ss[1]);
-        //console.log(src, rotation)
-        if (rotation) {
-            sky.setAttribute("rotation", rotation);
-        }
+  const ss = document.location.hash.substring(1).split(",");
+  const src = ss[0];
+  sky.setAttribute("src", src);
+  if (ss.length > 1) {
+    const rotation = decodeURIComponent(ss[1]);
+    //console.log(src, rotation)
+    if (rotation) {
+      sky.setAttribute("rotation", rotation);
     }
+  }
+  //
+  console.log(src)
+  if (src.indexOf("img/vr-jig202202.jpg") >= 0) {
+    const data = [
+      { deg1: 50, deg2: -85, url: "https://fukuno.jig.jp/3483" },
+      { deg1: -75, deg2: 10, url: "https://www.city.sabae.fukui.jp/kanko/playing/sanriyama.html" },
+      { deg1: 90, deg2: -5, url: "https://ja.wikipedia.org/wiki/%E9%AF%96%E6%B1%9F%E9%A7%85" },
+      { deg1: 65, deg2: -40, url: "https://www.megane.gr.jp/museum/" },
+      { deg1: 150, deg2: -32, url: "https://www.city.sabae.fukui.jp/about_city/shinoshokai/kokyoshisetsu/sports_shisetsu/higashikoen_kyogijo.html" },
+    ];
+    for (const d of data) {
+      const sphere = document.createElement("a-sphere");
+      sphere.setAttribute("color", "#f22");
+      const d2r = Math.PI / 180;
+      const th = d.deg1 * d2r;
+      const th2 = d.deg2 * d2r;
+      const dis = 80;
+      const y = Math.sin(th2) * dis;
+      const dis2 = Math.cos(th2) * dis;
+      const x = Math.cos(th) * dis2;
+      const z = Math.sin(th) * dis2;
+      sphere.setAttribute("position", { x, y, z });
+      const r = 3;
+      sphere.setAttribute("radius", r);
+      scene.appendChild(sphere);
+      //sphere.classList.add("clickable");
+      sphere.addEventListener("click", () => {
+        window.open(d.url, "_blank");
+        console.log(camera.components["look-controls"].yawObject.rotation.y);
+        console.log(camera.components["look-controls"].pitchObject.rotation);
+      });
+    }
+    camera.components["look-controls"].yawObject.rotation.y = 2.824;
+    camera.components["look-controls"].pitchObject.rotation.x = -1.098;
+    camera.components["look-controls"].pitchObject.rotation.z = 0;
+  }
 };
 </script>
 </body>
